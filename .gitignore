@@ -6,6 +6,8 @@ __pycache__/
 #Virtualenv directory
 merger
 
+.vscode
+
 # C extensions
 *.so
 
