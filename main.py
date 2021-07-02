@@ -11,8 +11,10 @@ Method to setup the parser and add the expected arguments
     """
     parser = argparse.ArgumentParser()
     # adding arguments to the parser
-    parser.add_argument('-i', '--input-directory', dest='input', default='help', required=True)
-    parser.add_argument('-t', '--target', dest='target', default='help', help='name or directory of the output')
+    parser.add_argument('-i', '--input-directory',
+                        dest='input', default='help', required=True)
+    parser.add_argument('-t', '--target', dest='target',
+                        default='merged.pdf', help='name or directory of the output')
     parser.add_argument('-d', '--delete', action='store_true', dest='delete',
                         help='if this argument is set all source files will be deleted')
     return parser
