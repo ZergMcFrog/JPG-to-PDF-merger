@@ -1,18 +1,19 @@
 import argparse
 import re
+from PIL import Image
 from os import listdir
 from fpdf import FPDF
 
 
 def setup_argument_parser() -> argparse.ArgumentParser:
     """
-Method to setup the parser and add the expected arguments
+    Method to setup the parser and add the expected arguments
     :rtype: argparse.ArgumentParser
     """
     parser = argparse.ArgumentParser()
     # adding arguments to the parser
     parser.add_argument('-i', '--input-directory',
-                        dest='input', default='help', required=True)
+                        dest='input', default='.', required=True)
     parser.add_argument('-t', '--target', dest='target',
                         default='merged.pdf', help='name or directory of the output')
     parser.add_argument('-d', '--delete', action='store_true', dest='delete',
@@ -29,15 +30,23 @@ This methods merges all files from given list into a single PDF
     files.sort()    # sort the files by name
     pdf = FPDF()
     for file in files:
-        pdf.add_page()
-        pdf.image(file)
+        image_file = Image.open(file)
+
+        size_tuple = image_file.size
+        orientation = "P"
+        if size_tuple[0] < size_tuple[1]:
+            orientation = "L"
+            size_tuple = (size_tuple[1], size_tuple[0])
+        pixel_size = .5 # Converting sizes between the image and pdf
+        pdf.add_page(orientation, (size_tuple[0]*pixel_size,size_tuple[1]*pixel_size))
+        pdf.image(file, type="JPG")
         print("File: {} successfully added".format(file))
     pdf.output(target, 'F')
 
 
 def parse_arguments(parser: argparse.ArgumentParser):
     """
-Method which parses all arguments and executes the corresponding command
+    Method which parses all arguments and executes the corresponding command
     :param parser: Parser which handles the arguments
     """
     arguments = parser.parse_args()
